@@ -1,6 +1,6 @@
-// /app/api/inngest/route.js
+// config/inngest.js
 import { Inngest } from "inngest";
-import connectDB from "./db";
+import connectDB from "./db";  // Since both are in config folder
 import User from "@/models/User";
 
 // Initialize Inngest client
@@ -15,18 +15,18 @@ export const syncUserCreation = inngest.createFunction(
     event: "clerk/user.created"
   },
   async ({ event }) => {
-      const { id, first_name, last_name, email_addresses, image_url } = event.data
+      const { id, first_name, last_name, email_addresses, image_url } = event.data;
       const userData = {
         _id: id,
         email: email_addresses[0].email_address,
         name: first_name + ' ' + last_name,
         imageUrl: image_url
-      }
+      };
 
-      await connectDB()
-      await User.create(userData)
+      await connectDB();
+      await User.create(userData);
   }
-)
+);
 
 // Function to sync user update
 export const syncUserUpdation = inngest.createFunction(
@@ -37,18 +37,18 @@ export const syncUserUpdation = inngest.createFunction(
     event: "clerk/user.updated"
   },
   async ({ event }) => {
-      const { id, first_name, last_name, email_addresses, image_url } = event.data
+      const { id, first_name, last_name, email_addresses, image_url } = event.data;
       const userData = {
         _id: id,
         email: email_addresses[0].email_address,
         name: first_name + ' ' + last_name,
         imageUrl: image_url
-      }
+      };
 
-      await connectDB()
-      await User.findByIdAndUpdate(id, userData)
+      await connectDB();
+      await User.findByIdAndUpdate(id, userData);
   }
-)
+);
 
 // Function to sync user deletion
 export const syncUserDeletion = inngest.createFunction(
@@ -59,10 +59,9 @@ export const syncUserDeletion = inngest.createFunction(
     event: "clerk/user.deleted"
   },
   async ({ event }) => {
-      const { id } = event.data
-
+      const { id } = event.data;
 
       await connectDB();
-      await User.findByIdAndDelete(id)
+      await User.findByIdAndDelete(id);
   }
-)
+);

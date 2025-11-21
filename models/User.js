@@ -1,15 +1,14 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    _id:{ type: string, required:true},
-    name: { type: string, required:true},
-    email: { type: string, required:true, unique: true},
-    imageUrl: { type: string, required:true},
-    cartItems: { type:Object, default: {}}
+    _id: { type: String, required: true }, // ✅ FIXED: String not string
+    name: { type: String, required: true }, // ✅ FIXED: String not string
+    email: { type: String, required: true, unique: true }, // ✅ FIXED: String not string
+    imageUrl: { type: String, required: true }, // ✅ FIXED: String not string
+    cartItems: { type: Object, default: {} }
+}, { minimize: false });
 
-}, { minimize: false})
+// ✅ FIXED: Use mongoose.models, not mongoose.modelNames
+const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-
-const User = mongoose.modelNames.user || mongoose.model('user', userSchema)
-
-export default User
+export default User;
