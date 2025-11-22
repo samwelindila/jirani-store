@@ -1,9 +1,7 @@
 import connectDB from "@/config/db"
 import User from "@/models/User"
 import { NextResponse } from "next/server"
-
-const { getAuth } = require("@clerk/nextjs/server")
-
+import { getAuth } from "@clerk/nextjs/server"
 
 
 export async function GET(request) {

@@ -2,6 +2,7 @@
 import { Inngest } from "inngest";
 import connectDB from "./db";  // Since both are in config folder
 import User from "@/models/User";
+import Order from "@/models/Order";
 
 // Initialize Inngest client
 export const inngest = new Inngest({ id: "quickcart-next" });
@@ -65,3 +66,33 @@ export const syncUserDeletion = inngest.createFunction(
       await User.findByIdAndDelete(id);
   }
 );
+
+
+//inngest Function to create user order in database
+export const createUserOrder = inngest.createFunction(
+  {
+    id:'create-user-order',
+    batchEvents: {
+      maxSize: 25,
+      timeout: '5s'
+    }
+  },
+  {event: 'order/created'},
+  async ({events}) => {
+
+    const orders = events.map((event)=> {
+      return {
+        userId: event.data.UserId,
+        items: event.data.items,
+        amount: event.data.amount,
+        address: event.data.address,
+        data: event.data.date
+      }
+    })
+
+    await connectDB()
+    await Order.insertMany(orders)
+
+    return { success: true, processed: orders.length};
+  }
+)
