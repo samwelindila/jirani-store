@@ -3,7 +3,7 @@ import authSeller from "@/lib/authSeller"
 import Product from "@/models/Product"
 import { NextResponse } from "next/server"
 
-const { getAuth } = require("@clerk/nextjs/server")
+import { getAuth } from "@clerk/nextjs/server"
 
 
 
